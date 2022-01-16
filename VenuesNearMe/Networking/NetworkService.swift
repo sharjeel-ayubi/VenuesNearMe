@@ -12,6 +12,9 @@ protocol NetworkService {
 }
 
 final class DefaultNetworkService: NetworkService {
+    
+    var task: URLSessionTask?
+    
     func request<Request>(_ request: Request, completion: @escaping (Result<Request.Response, Error>) -> Void) where Request : DataRequest {
         
         guard var urlComponent = URLComponents(string: request.url) else {
@@ -37,7 +40,7 @@ final class DefaultNetworkService: NetworkService {
         urlRequest.httpMethod = request.method.rawValue
         urlRequest.allHTTPHeaderFields = request.header
         
-        URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+        task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
             if let error = error {
                 return completion(.failure(error))
             }
@@ -55,7 +58,12 @@ final class DefaultNetworkService: NetworkService {
             } catch let error as NSError {
                 completion(.failure(error))
             }
-        }.resume()
+        }
+        task?.resume()
+    }
+    
+    func cancel() {
+        self.task?.cancel()
     }
     
     
