@@ -9,6 +9,7 @@ import Foundation
 
 class VenuesResponse: Codable {
     let summary: Summary?
+    let results: [VenueDetail]?
 }
 
 class Summary: Codable {
@@ -28,7 +29,21 @@ class Location: Codable {
 }
 
 class VenueDetail: Codable {
-    
+    let id: String?
+    let dist: Double?
+    let poi: POI?
+    let address: Address?
+    let position: Location?
+}
+
+class POI: Codable {
+    let name: String?
+    let phone: String?
+    let url: String?
+}
+
+class Address: Codable {
+    let freeformAddress: String?
 }
 
 
